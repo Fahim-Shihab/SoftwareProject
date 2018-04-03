@@ -77,7 +77,6 @@ public class UStats {
                     mFireChild.setValue(" Time: " + (u.getTotalTimeInForeground() / (1000 * 60)) +
                             " minutes " + (u.getTotalTimeInForeground() / 1000) % (60) + " seconds");
                 }
-
         }
 
     }
