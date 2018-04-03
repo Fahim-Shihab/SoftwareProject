@@ -50,8 +50,8 @@ public class UStats {
         calendar.add(Calendar.HOUR, -1);
         long startTime = calendar.getTimeInMillis();
 
-        Log.d(TAG, "Range start:" + dateFormat.format(startTime) );
-        Log.d(TAG, "Range end:" + dateFormat.format(endTime));
+        Log.d(TAG, "Range Start:" + dateFormat.format(startTime) );
+        Log.d(TAG, "Range End:" + dateFormat.format(endTime));
 
         List<UsageStats> usageStatsList = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY,
                 startTime,endTime);
@@ -72,9 +72,11 @@ public class UStats {
                 if(appname.startsWith("org ")) appname = appname.replace("org ","");
 
                 System.out.println("Appname: "+appname);
-                Firebase mFireChild = mFire.child("Package: " + appname);
-                mFireChild.setValue(" Time: " + (u.getTotalTimeInForeground()/(1000*60))+
-                        " minutes "+ (u.getTotalTimeInForeground()/1000)%(60)+" seconds");
+                if((u.getTotalTimeInForeground()/1000)>0) {
+                    Firebase mFireChild = mFire.child("Package: " + appname);
+                    mFireChild.setValue(" Time: " + (u.getTotalTimeInForeground() / (1000 * 60)) +
+                            " minutes " + (u.getTotalTimeInForeground() / 1000) % (60) + " seconds");
+                }
 
         }
 
