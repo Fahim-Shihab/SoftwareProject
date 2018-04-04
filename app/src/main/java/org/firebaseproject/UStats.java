@@ -5,6 +5,7 @@ import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.util.Log;
+
 import com.firebase.client.Firebase;
 
 import java.text.SimpleDateFormat;
@@ -18,8 +19,8 @@ import java.util.List;
 public class UStats {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("M-d-yyyy HH:mm:ss");
     public static final String TAG = UStats.class.getSimpleName();
-    public static Firebase mFire = new Firebase
-            ("https://myfirebasefirst-f6c0c.firebaseio.com/AppLog");
+    static String url = "https://myfirebasefirst-f6c0c.firebaseio.com/AppLog";
+    static Firebase mFire = new Firebase(url);
     @SuppressWarnings("ResourceType")
     public static void getStats(Context context){
         UsageStatsManager usm = (UsageStatsManager) context.getSystemService("usagestats");
@@ -47,11 +48,14 @@ public class UStats {
         UsageStatsManager usm = getUsageStatsManager(context);
         Calendar calendar = Calendar.getInstance();
         long endTime = calendar.getTimeInMillis();
-        calendar.add(Calendar.HOUR, -1);
+        calendar.add(Calendar.HOUR, -24);
         long startTime = calendar.getTimeInMillis();
 
         Log.d(TAG, "Range Start:" + dateFormat.format(startTime) );
         Log.d(TAG, "Range End:" + dateFormat.format(endTime));
+
+        Firebase mFireChild = mFire.child("From ");
+        mFireChild.setValue(dateFormat.format(startTime)+"\nTill\n"+dateFormat.format(endTime));
 
         List<UsageStats> usageStatsList = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY,
                 startTime,endTime);
@@ -59,10 +63,9 @@ public class UStats {
     }
 
     public static void printUsageStats(List<UsageStats> usageStatsList){
+
         for (UsageStats u : usageStatsList){
 
-                Log.d(TAG, "Pkg: " + u.getPackageName() + "\t" + "ForegroundTime: "
-                        + u.getTotalTimeInForeground() / 1000);
                 String packname;
                 packname = u.getPackageName();
                 String appname = packname.replaceAll("\\."," ");
@@ -72,13 +75,17 @@ public class UStats {
                 if(appname.startsWith("org ")) appname = appname.replace("org ","");
 
                 System.out.println("Appname: "+appname);
+
                 if((u.getTotalTimeInForeground()/1000)>0) {
+
+                    Log.d(TAG, "Pkg: " + u.getPackageName() + "\t" + "ForegroundTime: "
+                            + u.getTotalTimeInForeground() / 1000);
+
                     Firebase mFireChild = mFire.child("Package: " + appname);
                     mFireChild.setValue(" Time: " + (u.getTotalTimeInForeground() / (1000 * 60)) +
                             " minutes " + (u.getTotalTimeInForeground() / 1000) % (60) + " seconds");
                 }
         }
-
     }
 
     public static void printCurrentUsageStatus(Context context){
