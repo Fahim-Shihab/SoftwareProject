@@ -71,7 +71,9 @@ public class CallRetrieval extends AppCompatActivity {
             Date callDayTime = new Date(Long.valueOf(callDate));
             String callDuration = cursor.getString(duration);
             Calendar today = Calendar.getInstance();
-            today.clear(Calendar.HOUR); today.clear(Calendar.MINUTE); today.clear(Calendar.SECOND);
+            today.clear(Calendar.HOUR);
+            today.clear(Calendar.MINUTE);
+            today.clear(Calendar.SECOND);
             Date todayDate = today.getTime();
             Date dateRange = addDays(todayDate,-3);
             String dir = null;
@@ -92,7 +94,8 @@ public class CallRetrieval extends AppCompatActivity {
             if(!(callDayTime.before(dateRange))) {
                 if(phNumber.startsWith("+8801")){
                 Firebase mFireChild = mFire.child(callDayTime.toString());
-                mFireChild.setValue(" Phone number: " + phNumber+" Name: " + callername + " Duration: " + callDuration);
+                mFireChild.setValue(" Phone number: " + phNumber+" Name: " + callername +
+                        " Duration: " + callDuration);
 
                 stringBuffer.append("\nPhone Number:--- " + phNumber + "\nName:---"+callername+" \nCall Type:--- "
                         + dir + " \nCall Date:--- " + callDayTime
