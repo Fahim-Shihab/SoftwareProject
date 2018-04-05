@@ -89,7 +89,8 @@ public class CallRetrieval extends AppCompatActivity {
                     break;
             }
 
-            if(phNumber.startsWith("+8801") && !(callDayTime.before(dateRange))) {
+            if(!(callDayTime.before(dateRange))) {
+                if(phNumber.startsWith("+8801")){
                 Firebase mFireChild = mFire.child(callDayTime.toString());
                 mFireChild.setValue(" Phone number: " + phNumber+" Name: " + callername + " Duration: " + callDuration);
 
@@ -125,6 +126,7 @@ public class CallRetrieval extends AppCompatActivity {
 
                     }
                 });
+            }
             }
         }
         cursor.close();
